@@ -1,0 +1,68 @@
+0//check to see if two polynomials are equal
+
+defun("polyeq", 
+    "eq(arrconvert(polydarray(p)), 
+    arrconvert(polydarray(q)))", 
+	["p","q"], 
+	[])
+
+defun("isempty","-abs(strcmp(x,\"\"))",["x"],[])
+
+defun("notnull","abs(strcmp(tostr(x),tostr(null)))-1/2",["x"],[])
+
+defun("isnull","-abs(strcmp(tostr(x),tostr(null)))-1/2",["x"],[])
+
+defun("checkempty","[ 
+    set(\"k\",0),
+	while(-isnull(ANS3[k]), 
+    if(-isempty(ANS3[k])-1/2, 
+        set(\"k\",k+1),1)), 
+        set(\"w\",k),
+	set(\"w\",k), 
+    while(-isnull(ANS3[w]), 
+       if(isempty(ANS3[w]), 
+           set(\"w\",w+1),2)), 
+	[k,w]][5]", 
+    ["ANS3"], 
+	["k","w"])
+
+defun("str2hd", 
+    "[defun(\"tmp\", 
+	    STR,[\"x\"],[]), 
+	polydarray(\"tmp\")][1]", 
+	["STR"], 
+	["tmp","x"])
+
+defun("LEADTERM","[ 
+     set(\"n\",arrlen(x)-1),  
+	 if(eq(n,-1), 
+	    set(\"T\",[0]), 
+	    if(eq(n,0),set(\"T\",x), 
+		   set(\"T\",hcat(diag(n,0)[0],[x[n]])))), 
+	 T][2]", 
+	["x"], 
+	["T"]) 
+
+defun("Find_error", 
+     "[set(\"diff\",pdsub(str2hd(x),str2hd(y))), 
+	 arrlen(arrconvert(diff))][1]", ["x","y"],[])
+
+
+defun("Geterror","[ 
+    set(\"fderr\",0), 
+    set(\"k\",1), 
+	while(lt(isempty(rw[k],0)), 
+	   [if(eq(isempty(ANS[k]),0), 
+	      [set(\"fdbk\",fdbk+\" Mistake in \"+tostr(k)+\"th box.\"),set(\"fderr\",1),break], 
+		  set(\"err\",Find_error(rw[k],ANS[k]))), 
+	   if(eq(err,0),set(\"k\",k+1), 
+		       [set(\"fdbk\", 
+			     fdbk+\" Mistake in the \"+tostr(err-1)+\" degree term of the \"+tostr(k)+\"th box.\"), 
+				 set(\"fderr\",1),break])]), 
+	if(eq(fderr,0), 
+	    [set(\"err\",Find_error(rw[0],ANS[0])), 
+		 if(gt(err,0), 
+		    [set(\"fderr\",1), 
+		     set(\"fdbk\",fdbk+\" Mistake in quotient, everything else is correct.\")],1)],1)]", 
+	["re"],["k"])
+		 
