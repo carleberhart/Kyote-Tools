@@ -1,0 +1,193 @@
+0// define the zero function
+
+defun("zerofun","0",["x"], [])
+
+0// HD array of the zero function
+
+0//set("zeroHD",polydarray("zerofun"))
+
+setfun("yomama","(1+x)^2",["x"])
+
+defun("ff","3x^7+x+1",["x"],[])
+  
+defun("gg","x(3x^7+x+1)+x^2+x",["x"],[])
+
+0//calculate the degree of a polynomial function by converting to HDarray
+
+defun("DEGx","[set(\"a\",polydarray(x)),set(\"b\",pdinfo(a)),b][2][1][0]",["x"],["a","b"])
+
+0//hack to convert [] entries in [a,b] to  [0] which works as 0 in HDarrays
+
+defun("ddivFIX","[if(ne(strcmp(tostr(A[0][0]),\"(null)\"),0),A[0],[0]),if(ne(strcmp(tostr(A[1][0]),\"(null)\"),0),A[1],[0])]",["A"],[])
+
+0// calculate lead term of an array ([1,2,3,4]->[0,0,0,4]
+
+defun("LEADTERM","[set(\"k\",1), clear(\"T\"),set(\"T\",x[arrlen(x)-1]),while(lt(k,arrlen(x)),[set(\"T\",0), set(\"k\",k+1)]),get(\"T\")][4]",["x"],["T","k"])
+
+0//  calculate the degree term of a polynomia function 
+
+0// toHDarray is needed because LEADTERM is not an array of mumber
+
+defun("toHDarray","arrconvert([clear(\"k\"), set(\"k\",1), clear(\"W\"),set(\"W\",[LT[0]]),while(ne(strcmp(\"(null)\",tostr(LT[k])),0),[set(\"W\",hcat(W,[LT[k]])),set(\"k\",k+1)]),W][5])",["LT"],[["W","k"]])
+
+0// DEGREETERM returns the degree term of a  polynomial function
+
+defun("DEGREETERM","toHDarray(LEADTERM(arrconvert(polydarray(x))))",["x"],[])
+
+0// DEGREETERMHD returns the degree term of an HDarray
+
+defun("DEGREETERMHD","toHDarray(LEADTERM(arrconvert(x)))",["x"],[])
+
+0// for HD arrays A,B, DIVab(A,B) returns [quo(A,B), rem(A,B)] (A/B)
+
+defun("DIVab","[set(\"n\",arrconvert(a1)),set(\"m\",arrconvert(a0)),ddivFIX(pddiv(m,n))][2]",["a0","a1"],["n","m"])
+
+0// for HD arrays A,B, REMab(A,B) returns  DIVab(A,B)[1] as HDArray
+
+0//defun("REMab","[ arrconvert(DIVab(a0,a1))[1]  ][0]", ["a0","a1"],[])
+
+0// for HD arrays A,B, QUOab(A,B) returns  DIVab(A,B)[0] as HDArray
+
+defun("QUOab","[arrconvert(DIVab(a0,a1))[0]][0]",["a0","a1"],[])
+
+0// Check equality of two HD arrays by checking equality of associated arrays
+
+defun("eqHD","if(eq(arrconvert(A),arrconvert(B)),1,-1)",["A","B"],[])
+
+0//getanshd takes a list ["f1","f2",...,"fn"] of polynomial functions of x and returns the reversed list of the corresponding hd arrays
+
+0// note that if this is a list of answer variables then it should be reversed
+
+defun("getanshd","[clear(\"W\"),clear(\"k\"),clear(\"tmp\"),set(\"k\",0),while (-eq(strcmp(tostr(Z[k]),\"(null)\"),0),[set(\"tmp\",polydarray(Z[k])),set(\"k\",k+1)]),get(\"tmp\")][5]",["Z"],["k","tmp","W"])
+
+0//SElect the ord term from an array:  [0,0,0,3,4,5,6]=>[0,0,0,3]
+
+defun("ORDTERM","if(-eq(X[0],0),[X[0]],[set(\"k\",0),set(\"T\",[X[0]]),[while(eq(X[k+1],0),[set(\"T\",hcat(T,[X[k+1]])),set(\"k\",k+1)]      )],set(\"T\",hcat(T,[X[k+1]])),T  ][4])",["X"],["k","T"])
+
+0//array ord  term f M is an array of row vectors, calculate [n,M[n]] where n is minimlal with respect to M[n] having a length.
+
+0// BREAKS defun("arrOrdTrm","[set(\"tmp\",M[\"arrlen\"][\"isnan\"]),set(\"k\",0),while(eq(tmp[k],1),[set(\"joe\",[k+1,M[k+1]]),set(\"k\",k+1)]),joe][3]",["M"],["k","tmp","joe"])
+
+0// are two hd arrays equal 
+
+defun("eqHD","eq(arrconvert(x),arrconvert(y))",["x","y"],[])
+
+0//are two polynomial functions equal?
+
+defun("eqpol","eq(arrconvert(polydarray(x)),arrconvert(polydarray(y)))",["x","y"],[])
+  
+0// eqpol("ff","gg")
+
+0// isempty checks whether a string is "". -returns 0 if equal, + int if not 
+
+defun("isempty","-abs(strcmp(x,\"\"))",["x"],[])
+
+0//if Name, STRm var have values then this defines a function,
+
+0//[set("NAME","jojo"),set("STR","x^3"),set("var","x")]
+
+
+0//defun(getvalue("NAME"),getvalue("STR"),[getvalue("var")],[])
+
+
+0// generate sequence of answer names
+
+
+0// [clear("tmp"),clear("ANS"),clear("k"),set("k",2),set("ANS",["ans_1"]),while(lt(k,10),[set("tmp",["ans_"+tostr(k)]),set("ANS",hcat(ANS,tmp)),set("k",k+1)]),ANS][6]
+
+
+0//  ["ans_1", "ans_2", "ans_3", "ans_4", "ans_5", "ans_6", "ans_7", "ans_8", "ans_9"]
+
+
+0// generate seq of  tvars_raw
+
+
+0//[clear("tmp"),clear("ANS"),clear("k"),set("k",2),set("ANS",["ans1_raw"]),while (lt(k,10),[set("tmp",["ans"+tostr(k)+"_raw"]),set("ANS",hcat(ANS,tmp)),set("k",k+1)]),ANS][6]
+
+ 
+0// ["ans1_raw", "ans2_raw", "ans3_raw", "ans4_raw", "ans5_raw", "ans6_raw", "ans7_raw", "ans8_raw", "ans9_raw"]
+
+0// testfun
+
+defun("joker","x^2+x+1",["x"],[])
+
+0// check that something is not null - use to see if gone past end of an array
+
+defun("notnull","abs(strcmp(tostr(x),tostr(null)))-1/2",["x"],[])
+
+
+0// TAKE A list of strings ANS3 and return [f,e] where f is the index of the first empty string and
+
+0// e is the index of the next non-empty or is the length of the list plus 1 if there is no next non-
+
+set("ANS3", ["a", "v", "c", "", "", "c", ""])
+
+
+0// [set("k",0),while(-isnull(ANS3[k]),if(-isempty(ANS3[k])-1/2,set("k",k+1),1)),set("w",k),set("w",k),while(-isnull(ANS3[w]),if(isempty(ANS3[w]),set("w",w+1),2)),[k,w]][5]
+
+
+ 0// [3, 5]
+
+
+0// checkempty takes a list of strings and returns the pair [a,b] where a is the location (base 0) 
+
+
+0// of the first empty element and b is either the location of the next nonempty element or the length of the list
+
+
+
+defun("checkempty","[set(\"k\",0),while(-isnull(ANS3[k]),if(-isempty(ANS3[k])-1/2,set(\"k\",k+1),1)),set(\"w\",k),set(\"w\",k),while(-isnull(ANS3[w]),if(isempty(ANS3[w]),set(\"w\",w+1),2)),[k,w]][5]",["ANS3"],["k","w"])
+
+
+
+0//> checkempty(ANS3) returns [3, 7]
+
+
+0// clear the variable x -  CLR("joe") (can't put clear("x") in an ee file since returns NAN this returns []
+
+
+defun("CLR","[clear(x),get(x)][1]",["x"],[])
+
+
+0// mkintseq(a,b)   makes the sequence  [a,a+1,...,a+|b-a|+1]
+
+defun("mkintseq","[defun(\"F\",\"y+a\",[\"x\",\"y\"],[]),set(\"n\",abs(a-b)+1),set(\"Z\",diag(n,0)[0]),map(Z,\"F\")  ][3]",["a","b"],[])
+
+
+0// generate the sequence of answers - temporary
+
+0//[CLR("Z"),CLR("tmp"),set("k",0), set("Z",mkintseq(2,7)),set("tmp",[ansname("ans",Z,k)]),while(notnull(Z[k+1]),[set("tmp",hcat(tmp,[ansname("ans",Z,k+1)])),set("k",k+1)]),tmp][6][0]
+
+0//  ["ans_2", "ans_3", "ans_4", "ans_5", "ans_6", "ans_7"]
+
+0// generate  name_int
+
+defun("ansname","[name+\"_\"+tostr(Z[k])]",["name","Z","k"],[])
+
+0//"ansname"    ansname("ans","jpe",2)
+
+
+defun("rawansname","[name+tostr(Z[k])+\"_raw\"]",["name","Z","k"],[])
+  
+0//rawansname("ans",[4,5,6],1) ->  ["ans5_raw"]
+  
+0// GRA isi get raw ans =
+
+
+0//BREAKS defun("GRA","[CLR(\"Z\"),CLR(\"tmp\"),set(\"k\",0), set(\"Z\",mkintseq(a,b)),set(\"tmp\",[rawansname(\"ans\",Z,k)]),while(notnull(Z[k+1]),[set(\"tmp\",hcat(tmp,[rawansname(\"ans\",Z,k+1)])),set(\"k\",k+1)]),tmp][6][0]",["name","a","b"],["k","Z","tmp"])
+
+
+defun("GRA","[CLR(\"Z\"),CLR(\"tmp\"),set(\"k\",0),set(\"Z\",mkintseq(a,b)), 
+set(\"tmp\",[rawansname(\"ans\",Z,k)]), 
+while(notnull(Z[k+1]), 
+[set(\"tmp\",hcat(tmp,[rawansname(\"ans\",Z,k+1)])),set(\"k\",k+1)]),tmp][6][0]", 
+["name","a","b"],["k","Z","tmp"])
+
+
+0//defun("GRA","[CLR(\"Z\"),CLR(\"tmp\"),set(\"k\",0), set(\"Z\",mkintseq(a,b)),set(\"tmp\",[rawansname(\"ans\",Z,k)]),while(notnull(Z[k+1]),[set(\"tmp\",hcat(tmp,[rawansname(\"ans\",Z,k+1)])),set(\"k\",k+1)]),tmp][6][0]",["name","a","b"],["k","Z","tmp"])
+
+0//> GRA("ans",3,9) ->["ans3_raw", "ans4_raw", "ans5_raw", "ans6_raw", "ans7_raw", "ans8_raw", "ans9_raw"]
+
+0// take a polynomial expression string to a hdarray
+
+defun("str2hd","[defun(\"tmp\",STR,[\"x\"],[]),polydarray(\"tmp\") ][1]",["STR"],["tmp","x"])
