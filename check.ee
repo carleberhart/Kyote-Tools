@@ -47,11 +47,10 @@ defun("Find_error",
      "[set(\"diff\",pdsub(str2hd(x),str2hd(y))), 
 	 arrlen(arrconvert(diff))][1]", ["x","y"],[])
 
-
 defun("Geterror","[ 
     set(\"fderr\",0), 
     set(\"k\",1), 
-	while(lt(isempty(rw[k],0)), 
+	while(lt(isempty(rw[k]),0), 
 	   [if(eq(isempty(ANS[k]),0), 
 	      [set(\"fdbk\",fdbk+\" Mistake in \"+tostr(k)+\"th box.\"),set(\"fderr\",1),break], 
 		  set(\"err\",Find_error(rw[k],ANS[k]))), 
@@ -65,4 +64,6 @@ defun("Geterror","[
 		    [set(\"fderr\",1), 
 		     set(\"fdbk\",fdbk+\" Mistake in quotient, everything else is correct.\")],1)],1)]", 
 	["re"],["k"])
+
+
 		 
